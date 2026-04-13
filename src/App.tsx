@@ -90,20 +90,8 @@ function AppContent() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 pb-10">
 
-        {/* ── Large ID Card — main focus ────────────────── */}
-        <div className="max-w-[900px] mx-auto mb-5">
-          <div className="animate-fade-in">
-            <IDCard ref={cardRef} data={cardData} isGenerating={isGenerating} />
-          </div>
-        </div>
-
-        {/* ── Action buttons ────────────────────────────── */}
-        <div className="max-w-[900px] mx-auto mb-8">
-          <ActionButtons cardRef={cardRef} data={cardData} />
-        </div>
-
         {/* ── Controls row ─────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-[900px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-[900px] mx-auto mb-8">
 
           {/* Configuration */}
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm">
@@ -189,8 +177,20 @@ function AppContent() {
           </div>
         </div>
 
+        {/* ── ID Card ──────────────────────────────────── */}
+        <div className="max-w-[520px] mx-auto mt-8">
+          <div className="animate-fade-in">
+            <IDCard ref={cardRef} data={cardData} isGenerating={isGenerating} />
+          </div>
+        </div>
+
+        {/* ── Action buttons ───────────────────────────── */}
+        <div className="max-w-[520px] mx-auto mt-4 mb-6">
+          <ActionButtons cardRef={cardRef} data={cardData} />
+        </div>
+
         {/* In-content AdSense */}
-        <div className="max-w-[900px] mx-auto mt-6">
+        <div className="max-w-[900px] mx-auto">
           <AdBanner slot="0987654321" format="rectangle" label="Sponsored" />
         </div>
       </main>

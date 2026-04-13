@@ -194,42 +194,41 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
 
         {/* Footer strip */}
         <div className="mt-3">
-          <div className="h-px w-full mb-3" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}60, transparent)` }} aria-hidden="true" />
-          <div className="flex items-end justify-between gap-4">
-            <div className="flex-shrink-0 min-w-0">
-              <div className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-1 truncate">
-                {idLabel}
+          <div className="h-px w-full mb-2" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}60, transparent)` }} aria-hidden="true" />
+          {/* ID number — large, full width */}
+          <div className="mb-2">
+            <div className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-1">
+              {idLabel}
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="font-mono text-white font-bold text-lg sm:text-3xl tracking-widest truncate">
+                {idNumber}
               </div>
-              <div className="flex items-center gap-2">
-                <div className="font-mono text-white font-bold text-xs sm:text-base tracking-wider">
-                  {idNumber}
-                </div>
-                <button
-                  data-html2canvas-ignore
-                  onClick={handleCopyId}
-                  className="flex-shrink-0 p-0.5 rounded text-white/40 hover:text-white/80 transition-colors duration-150"
-                  aria-label={`Copy ${idLabel}`}
-                  title={copied ? t.copied : t.copyId}
-                >
-                  {copied
-                    ? <Check size={13} className="text-green-400" />
-                    : <Copy size={13} />}
-                </button>
+              <button
+                data-html2canvas-ignore
+                onClick={handleCopyId}
+                className="flex-shrink-0 p-0.5 rounded text-white/40 hover:text-white/80 transition-colors duration-150"
+                aria-label={`Copy ${idLabel}`}
+                title={copied ? t.copied : t.copyId}
+              >
+                {copied
+                  ? <Check size={14} className="text-green-400" />
+                  : <Copy size={14} />}
+              </button>
+            </div>
+          </div>
+          {/* Expiry + barcode row */}
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <div className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-0.5">
+                {t.fieldExpires}
+              </div>
+              <div className="font-mono text-white font-bold text-xs sm:text-sm">
+                {dateExpiry}
               </div>
             </div>
-
-            <div className="flex items-end gap-4 flex-shrink-0">
-              <div className="text-right">
-                <div className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-1">
-                  {t.fieldExpires}
-                </div>
-                <div className="font-mono text-white font-bold text-xs sm:text-base">
-                  {dateExpiry}
-                </div>
-              </div>
-              <div aria-hidden="true">
-                <Barcode value={idNumber} />
-              </div>
+            <div aria-hidden="true">
+              <Barcode value={idNumber} />
             </div>
           </div>
         </div>
