@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 
 import { Header } from './components/Header';
@@ -22,6 +22,15 @@ export default function App() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const cardRef = useRef<HTMLDivElement>(null);
+  const hasUserSelected = useRef(false);
+
+  // Sync when IP geolocation resolves after initial render
+  useEffect(() => {
+    if (!hasUserSelected.current) {
+      setCountry(detectedCountry);
+      setCardData(generateCardData(detectedCountry));
+    }
+  }, [detectedCountry]);
 
   const generate = useCallback((c: Country) => {
     setIsGenerating(true);
@@ -33,6 +42,7 @@ export default function App() {
   }, []);
 
   const handleCountryChange = (c: Country) => {
+    hasUserSelected.current = true;
     setCountry(c);
     generate(c);
   };
