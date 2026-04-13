@@ -9,8 +9,6 @@ interface IDCardProps {
   isGenerating?: boolean;
 }
 
-// ── Region → card gradient theme ─────────────────────────────────────────────
-
 const regionGradients: Record<string, { from: string; via: string; to: string; accent: string }> = {
   Americas: { from: '#0f172a', via: '#1e3a5f', to: '#0f172a', accent: '#60a5fa' },
   Europe:   { from: '#0f172a', via: '#1e1b4b', to: '#0f172a', accent: '#818cf8' },
@@ -31,7 +29,7 @@ function PhotoPlaceholder() {
 
 function Chip() {
   return (
-    <div className="w-14 h-10 rounded-md flex-shrink-0"
+    <div className="w-10 h-7 rounded-md flex-shrink-0"
       style={{ background: 'linear-gradient(135deg, #d4a843 0%, #f5d478 40%, #c69b2e 100%)' }}>
       <svg viewBox="0 0 40 28" className="w-full h-full opacity-40">
         <rect x="0" y="9" width="40" height="10" fill="none" stroke="currentColor" strokeWidth="0.5" />
@@ -50,13 +48,12 @@ function Barcode({ value }: { value: string }) {
     bars.push({ width: (code % 3) + 1, isSpace: false });
     bars.push({ width: (code % 2) + 1, isSpace: true });
   }
-
   return (
-    <div className="flex items-end gap-0 h-12" aria-hidden="true">
+    <div className="flex items-end gap-0 h-8" aria-hidden="true">
       {bars.map((bar, i) => (
         <div
           key={i}
-          style={{ width: `${bar.width * 2.5}px`, backgroundColor: bar.isSpace ? 'transparent' : 'rgba(255,255,255,0.85)' }}
+          style={{ width: `${bar.width * 2}px`, backgroundColor: bar.isSpace ? 'transparent' : 'rgba(255,255,255,0.85)' }}
           className="h-full rounded-sm"
         />
       ))}
@@ -64,13 +61,13 @@ function Barcode({ value }: { value: string }) {
   );
 }
 
-function Field({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
+function Field({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
-      <div className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-0.5 truncate">
+      <div className="text-[7px] font-semibold uppercase tracking-widest text-white/40 mb-0.5 truncate">
         {label}
       </div>
-      <div className={`text-white text-xs sm:text-sm font-semibold truncate ${mono ? 'font-mono' : ''}`}>
+      <div className="text-white text-[10px] font-semibold truncate">
         {value}
       </div>
     </div>
@@ -96,7 +93,7 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
     <div
       ref={ref}
       className={`
-        relative w-full rounded-3xl overflow-hidden select-none
+        relative w-full rounded-2xl overflow-hidden select-none
         shadow-2xl shadow-black/50
         transition-all duration-500
         ${isGenerating ? 'scale-95 opacity-60' : 'scale-100 opacity-100'}
@@ -106,80 +103,68 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
         background: `linear-gradient(135deg, ${theme.from} 0%, ${theme.via} 50%, ${theme.to} 100%)`,
       }}
     >
-      {/* Holographic shimmer overlay */}
+      {/* Holographic shimmer */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%)',
-          backgroundSize: '200% 100%',
-        }}
+        style={{ background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%)' }}
         aria-hidden="true"
       />
-
-      {/* Grid pattern overlay */}
+      {/* Grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,1) 20px, rgba(255,255,255,1) 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,1) 20px, rgba(255,255,255,1) 21px)',
-        }}
+        style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(255,255,255,1) 20px,rgba(255,255,255,1) 21px),repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(255,255,255,1) 20px,rgba(255,255,255,1) 21px)' }}
         aria-hidden="true"
       />
-
       {/* Accent glow */}
       <div
-        className="absolute top-0 right-0 w-72 h-72 rounded-full pointer-events-none opacity-10 blur-3xl"
+        className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none opacity-10 blur-3xl"
         style={{ backgroundColor: theme.accent, transform: 'translate(30%, -30%)' }}
         aria-hidden="true"
       />
 
-      {/* ── Card Content ──────────────────────────────────── */}
-      <div className="relative h-full flex flex-col p-4 sm:p-7">
+      {/* ── Card content ── */}
+      <div className="relative h-full flex flex-col p-3">
 
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="text-3xl sm:text-5xl flex-shrink-0 leading-none" aria-label={country.name}>
-              {flag}
-            </span>
+        {/* Header */}
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-2xl flex-shrink-0 leading-none" aria-label={country.name}>{flag}</span>
             <div className="min-w-0">
-              <div className="text-white font-bold text-xs sm:text-base leading-tight uppercase tracking-widest truncate">
+              <div className="text-white font-bold text-[11px] leading-tight uppercase tracking-widest truncate">
                 {country.name}
               </div>
-              <div className="text-white/40 text-[9px] sm:text-xs uppercase tracking-widest mt-0.5">
+              <div className="text-white/40 text-[8px] uppercase tracking-widest mt-0.5">
                 {t.cardNationalId}
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Chip />
-            {/* Hologram circle */}
             <div
-              className="w-10 h-10 rounded-full border border-white/20 flex-shrink-0 hidden sm:flex items-center justify-center"
-              style={{
-                background: `conic-gradient(from 0deg, ${theme.accent}33, transparent, ${theme.accent}33, transparent)`,
-              }}
+              className="w-7 h-7 rounded-full border border-white/20 flex items-center justify-center"
+              style={{ background: `conic-gradient(from 0deg, ${theme.accent}33, transparent, ${theme.accent}33, transparent)` }}
               aria-hidden="true"
             >
-              <div className="w-5 h-5 rounded-full border border-white/30" />
+              <div className="w-3 h-3 rounded-full border border-white/30" />
             </div>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="h-px w-full mb-3" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}60, transparent)` }} aria-hidden="true" />
+        <div className="h-px w-full mb-2" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}60, transparent)` }} aria-hidden="true" />
 
         {/* Body */}
-        <div className="flex gap-4 flex-1 min-h-0">
+        <div className="flex gap-3 flex-1 min-h-0">
           {/* Photo */}
           <div
-            className="flex-shrink-0 rounded-xl overflow-hidden border border-white/15"
-            style={{ width: 'clamp(64px, 13%, 110px)', aspectRatio: '4/5' }}
+            className="flex-shrink-0 rounded-lg overflow-hidden border border-white/15"
+            style={{ width: 'clamp(48px, 13%, 68px)', aspectRatio: '4/5' }}
           >
             <PhotoPlaceholder />
           </div>
 
-          {/* Fields grid */}
-          <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-3 content-start min-w-0">
+          {/* Fields */}
+          <div className="flex-1 grid grid-cols-2 gap-x-3 gap-y-1.5 content-start min-w-0">
             <div className="col-span-2">
               <Field label={t.fieldFullName} value={fullName} />
             </div>
@@ -192,16 +177,17 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
           </div>
         </div>
 
-        {/* Footer strip */}
-        <div className="mt-3">
+        {/* Footer */}
+        <div className="mt-2">
           <div className="h-px w-full mb-2" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}60, transparent)` }} aria-hidden="true" />
-          {/* ID number — large, full width */}
-          <div className="mb-2">
-            <div className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-1">
+
+          {/* ID number — prominent */}
+          <div className="mb-1.5">
+            <div className="text-[7px] font-semibold uppercase tracking-widest text-white/40 mb-0.5">
               {idLabel}
             </div>
-            <div className="flex items-center gap-2">
-              <div className="font-mono text-white font-bold text-lg sm:text-3xl tracking-widest truncate">
+            <div className="flex items-center gap-1.5">
+              <div className="font-mono text-white font-bold text-base tracking-wider truncate">
                 {idNumber}
               </div>
               <button
@@ -211,19 +197,18 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
                 aria-label={`Copy ${idLabel}`}
                 title={copied ? t.copied : t.copyId}
               >
-                {copied
-                  ? <Check size={14} className="text-green-400" />
-                  : <Copy size={14} />}
+                {copied ? <Check size={11} className="text-green-400" /> : <Copy size={11} />}
               </button>
             </div>
           </div>
-          {/* Expiry + barcode row */}
-          <div className="flex items-end justify-between gap-4">
+
+          {/* Expiry + barcode */}
+          <div className="flex items-end justify-between gap-3">
             <div>
-              <div className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/40 mb-0.5">
+              <div className="text-[7px] font-semibold uppercase tracking-widest text-white/40 mb-0.5">
                 {t.fieldExpires}
               </div>
-              <div className="font-mono text-white font-bold text-xs sm:text-sm">
+              <div className="font-mono text-white font-bold text-[10px]">
                 {dateExpiry}
               </div>
             </div>
