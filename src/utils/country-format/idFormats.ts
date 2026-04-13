@@ -51,6 +51,27 @@ export function getIdLabel(countryCode: string): string {
 }
 
 /**
+ * Generates a valid Thai National ID (13 digits) with a correct check digit.
+ *
+ * Structure: [1-8] + 11 random digits + check digit
+ * Check digit: checkDigit = (11 - (sum of d[i] * (13-i) for i=0..11)) % 11) % 10
+ */
+export function generateThaiId(): string {
+  // First digit: 1–8 (0 and 9 are reserved)
+  const first = faker.number.int({ min: 1, max: 8 });
+  const middle: number[] = Array.from({ length: 11 }, () =>
+    faker.number.int({ min: 0, max: 9 })
+  );
+  const base = [first, ...middle];
+
+  // Weights 13 → 2 for positions 0 → 11
+  const sum = base.reduce((acc, digit, i) => acc + digit * (13 - i), 0);
+  const checkDigit = (11 - (sum % 11)) % 10;
+
+  return base.join('') + String(checkDigit);
+}
+
+/**
  * Returns a realistic ID number string for the given country code.
  * Uses faker.helpers.fromRegExp for pattern-based generation.
  */
@@ -181,7 +202,7 @@ export function generateIdNumber(countryCode: string, dob: Date, gender: 'Male' 
     }
     case 'PH': return r(/[0-9]{4}-[0-9]{7}-[0-9]/);                           // PhilSys
     case 'VN': return r(/0[0-9]{11}/);                                          // CCCD 12 digits
-    case 'TH': return `${r(/[1-8]/)}${r(/[0-9]{12}/)}`;                       // 13-digit Thai NID
+    case 'TH': return generateThaiId();                                         // 13-digit Thai NID (valid check digit)
     case 'MM': return r(/[0-9]{6}\/[A-Z]{6}\([A-Z]\)[0-9]{6}/);
     case 'KH': return r(/[0-9]{9}/);
     case 'SA': {                                                                // Saudi NID
