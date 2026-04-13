@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(node -e \"const f = require\\('@faker-js/faker'\\); const keys = Object.keys\\(f\\).filter\\(k => k.startsWith\\('faker'\\)\\); console.log\\(keys.sort\\(\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(git init:*)",
+      "Bash(git remote:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
