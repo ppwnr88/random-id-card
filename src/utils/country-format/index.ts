@@ -58,7 +58,7 @@ import {
 } from '@faker-js/faker';
 
 import type { Country, IDCardData, Gender, BloodType } from '../../types';
-import { generateIdNumber } from './idFormats';
+import { generateIdNumber, getIdLabel } from './idFormats';
 
 // ── Faker locale map ─────────────────────────────────────────────────────────
 
@@ -226,6 +226,7 @@ export function generateCardData(country: Country): IDCardData {
   const expiryStr  = formatDate(expiryDate, dateFmt);
 
   const idNumber  = generateIdNumber(country.code, dob, gender);
+  const idLabel   = getIdLabel(country.code);
   const bloodType = f.helpers.arrayElement(bloodTypes);
 
   let address: string;
@@ -250,6 +251,7 @@ export function generateCardData(country: Country): IDCardData {
     dateOfBirth: dobStr,
     gender,
     idNumber,
+    idLabel,
     nationality: getNationality(country),
     dateIssued:  issuedStr,
     dateExpiry:  expiryStr,

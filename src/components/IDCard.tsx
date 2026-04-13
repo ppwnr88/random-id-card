@@ -1,4 +1,5 @@
-import { forwardRef } from 'react';
+import { forwardRef, useState, useCallback } from 'react';
+import { Copy, Check } from 'lucide-react';
 import type { IDCardData } from '../types';
 import { getFlag } from '../utils/country-format/countries';
 
@@ -77,9 +78,18 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
 }
 
 export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerating }, ref) => {
-  const { country, fullName, dateOfBirth, gender, idNumber, nationality, dateIssued, dateExpiry, placeOfBirth, bloodType } = data;
+  const { country, fullName, dateOfBirth, gender, idNumber, idLabel, nationality, dateIssued, dateExpiry, placeOfBirth, bloodType } = data;
   const flag = getFlag(country.code);
   const theme = regionGradients[country.region] ?? regionGradients.Americas;
+
+  const [copied, setCopied] = useState(false);
+  const handleCopyId = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(idNumber);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* ignore */ }
+  }, [idNumber]);
 
   return (
     <div
@@ -185,12 +195,25 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
         <div className="mt-2">
           <div className="h-px w-full mb-2" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}60, transparent)` }} aria-hidden="true" />
           <div className="flex items-end justify-between gap-4">
-            <div className="flex-shrink-0">
-              <div className="text-[7px] sm:text-[8px] font-semibold uppercase tracking-widest text-white/40 mb-0.5">
-                Document No.
+            <div className="flex-shrink-0 min-w-0">
+              <div className="text-[7px] sm:text-[8px] font-semibold uppercase tracking-widest text-white/40 mb-0.5 truncate">
+                {idLabel}
               </div>
-              <div className="font-mono text-white font-bold text-[10px] sm:text-xs tracking-wider">
-                {idNumber}
+              <div className="flex items-center gap-1.5">
+                <div className="font-mono text-white font-bold text-[10px] sm:text-xs tracking-wider">
+                  {idNumber}
+                </div>
+                <button
+                  data-html2canvas-ignore
+                  onClick={handleCopyId}
+                  className="flex-shrink-0 p-0.5 rounded text-white/40 hover:text-white/80 transition-colors duration-150"
+                  aria-label={`Copy ${idLabel}`}
+                  title={copied ? 'Copied!' : `Copy ${idLabel}`}
+                >
+                  {copied
+                    ? <Check size={10} className="text-green-400" />
+                    : <Copy size={10} />}
+                </button>
               </div>
             </div>
 

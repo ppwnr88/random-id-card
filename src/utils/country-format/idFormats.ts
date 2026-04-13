@@ -1,6 +1,56 @@
 import { faker } from '@faker-js/faker';
 
 /**
+ * Returns the official name of the national ID document for the given country code.
+ */
+export function getIdLabel(countryCode: string): string {
+  const labels: Record<string, string> = {
+    // Americas
+    US: 'Social Security Number', CA: 'Social Insurance Number', MX: 'CURP',
+    BR: 'CPF', AR: 'DNI', CL: 'RUT', CO: 'Cédula', PE: 'DNI',
+    VE: 'Cédula', EC: 'Cédula', BO: 'CI', PY: 'Cédula', UY: 'Cédula',
+    CR: 'Cédula', PA: 'Cédula', DO: 'Cédula', GT: 'DPI', HN: 'DNI',
+    NI: 'Cédula', SV: 'DUI', CU: 'Carnet', JM: 'TRN',
+    // Europe
+    GB: 'NI Number', DE: 'Personalausweis-Nr.', FR: 'NIR / INSEE',
+    IT: 'Codice Fiscale', ES: 'DNI', PT: 'NIF', NL: 'BSN',
+    BE: 'NRBE', SE: 'Personnummer', NO: 'Fødselsnummer', DK: 'CPR-nr.',
+    FI: 'Henkilötunnus', PL: 'PESEL', CZ: 'Rodné číslo', SK: 'Rodné číslo',
+    HU: 'Személyazonosító', RO: 'CNP', BG: 'ЕГН', HR: 'OIB',
+    SI: 'EMŠO', RS: 'JMBG', BA: 'JMBG', AL: 'NIPT', GR: 'ΑΔΤ',
+    AT: 'Ausweis-Nr.', CH: 'AHV-Nr.', LU: 'ID', IE: 'PPS Number',
+    IS: 'Kennitala', MT: 'ID Card', LV: 'Personas kods', LT: 'Asmens kodas',
+    EE: 'Isikukood', MD: 'IDNP', UA: 'РНОКПП', BY: 'ID Number',
+    RU: 'Серия и номер', MK: 'ЕМБГ', ME: 'ЈМБГ', XK: 'ID',
+    // Asia
+    CN: '居民身份证号', JP: 'マイナンバー', KR: '주민등록번호',
+    IN: 'Aadhaar', PK: 'CNIC', BD: 'NID', LK: 'NIC', NP: 'Citizenship No.',
+    MY: 'MyKad', SG: 'NRIC', ID: 'NIK', PH: 'PhilSys No.', VN: 'CCCD',
+    TH: 'บัตรประชาชน', MM: 'NRC', KH: 'National ID',
+    SA: 'National ID', AE: 'Emirates ID', QA: 'QID', KW: 'Civil ID',
+    BH: 'CPR', OM: 'National ID', JO: 'National ID', LB: 'National ID',
+    SY: 'National ID', IQ: 'National ID', IR: 'National ID', IL: 'Teudat Zehut',
+    YE: 'National ID', PS: 'National ID', KZ: 'ИИН', UZ: 'JSHSHIR',
+    TM: 'National ID', TJ: 'National ID', KG: 'National ID', AZ: 'FIN',
+    AM: 'National ID', GE: 'Personal ID', MN: 'Register No.', TW: '身分證號碼',
+    BN: 'National ID', TL: 'Bilhete de Identidade', MV: 'National ID',
+    BT: 'CID', LA: 'National ID', KP: 'National ID', AF: 'National ID',
+    // Africa
+    ZA: 'SA ID', NG: 'NIN', EG: 'National ID', KE: 'National ID',
+    GH: 'Ghana Card', MA: 'CIN', TN: 'CIN', DZ: 'National ID',
+    ET: 'National ID', TZ: 'NIDA', UG: 'National ID', SD: 'National ID',
+    SS: 'National ID', SN: 'National ID', CD: 'National ID', CG: 'National ID',
+    CM: 'CNI', ZM: 'National ID', ZW: 'National ID', AO: 'BI', MZ: 'DIRE',
+    NA: 'National ID', BW: 'Omang', RW: 'Indangamuntu', LY: 'National ID',
+    GA: 'National ID', CI: "Carte d'Identité", MG: 'CIN', MU: 'National ID',
+    SC: 'National ID',
+    // Oceania
+    AU: 'Driver Licence No.', NZ: 'National ID', FJ: 'National ID', PG: 'National ID',
+  };
+  return labels[countryCode] ?? 'ID Number';
+}
+
+/**
  * Returns a realistic ID number string for the given country code.
  * Uses faker.helpers.fromRegExp for pattern-based generation.
  */

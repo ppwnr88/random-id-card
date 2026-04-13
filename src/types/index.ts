@@ -19,6 +19,7 @@ export interface IDCardData {
   dateOfBirth: string;
   gender: Gender;
   idNumber: string;
+  idLabel: string;
   nationality: string;
   dateIssued: string;
   dateExpiry: string;
