@@ -2,6 +2,7 @@ import { forwardRef, useState, useCallback } from 'react';
 import { Copy, Check } from 'lucide-react';
 import type { IDCardData } from '../types';
 import { getFlag } from '../utils/country-format/countries';
+import { useLanguage } from '../i18n';
 
 interface IDCardProps {
   data: IDCardData;
@@ -81,6 +82,7 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
   const { country, fullName, dateOfBirth, gender, idNumber, idLabel, nationality, dateIssued, dateExpiry, placeOfBirth, bloodType } = data;
   const flag = getFlag(country.code);
   const theme = regionGradients[country.region] ?? regionGradients.Americas;
+  const { t } = useLanguage();
 
   const [copied, setCopied] = useState(false);
   const handleCopyId = useCallback(async () => {
@@ -145,7 +147,7 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
                 {country.name}
               </div>
               <div className="text-white/40 text-[8px] sm:text-[9px] uppercase tracking-widest">
-                National Identity Card
+                {t.cardNationalId}
               </div>
             </div>
           </div>
@@ -180,14 +182,14 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
           {/* Fields grid */}
           <div className="flex-1 grid grid-cols-2 gap-x-3 gap-y-2 content-start min-w-0">
             <div className="col-span-2">
-              <Field label="Full Name" value={fullName} />
+              <Field label={t.fieldFullName} value={fullName} />
             </div>
-            <Field label="Date of Birth" value={dateOfBirth} />
-            <Field label="Gender" value={gender} />
-            <Field label="Nationality" value={nationality} />
-            <Field label="Place of Birth" value={placeOfBirth} />
-            <Field label="Blood Type" value={bloodType} />
-            <Field label="Date Issued" value={dateIssued} />
+            <Field label={t.fieldDOB} value={dateOfBirth} />
+            <Field label={t.fieldGender} value={gender === 'Male' ? t.male : t.female} />
+            <Field label={t.fieldNationality} value={nationality} />
+            <Field label={t.fieldPOB} value={placeOfBirth} />
+            <Field label={t.fieldBloodType} value={bloodType} />
+            <Field label={t.fieldIssued} value={dateIssued} />
           </div>
         </div>
 
@@ -208,7 +210,7 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
                   onClick={handleCopyId}
                   className="flex-shrink-0 p-0.5 rounded text-white/40 hover:text-white/80 transition-colors duration-150"
                   aria-label={`Copy ${idLabel}`}
-                  title={copied ? 'Copied!' : `Copy ${idLabel}`}
+                  title={copied ? t.copied : t.copyId}
                 >
                   {copied
                     ? <Check size={10} className="text-green-400" />
@@ -220,7 +222,7 @@ export const IDCard = forwardRef<HTMLDivElement, IDCardProps>(({ data, isGenerat
             <div className="flex items-end gap-3 flex-shrink-0">
               <div className="text-right">
                 <div className="text-[7px] sm:text-[8px] font-semibold uppercase tracking-widest text-white/40 mb-0.5">
-                  Expires
+                  {t.fieldExpires}
                 </div>
                 <div className="font-mono text-white font-bold text-[10px] sm:text-xs">
                   {dateExpiry}

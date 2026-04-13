@@ -1,6 +1,7 @@
 import Select, { type StylesConfig, type SingleValue, components, type OptionProps, type SingleValueProps } from 'react-select';
 import { countries, getFlag } from '../utils/country-format/countries';
 import type { Country } from '../types';
+import { useLanguage } from '../i18n';
 
 interface CountryOption {
   value: string;
@@ -44,6 +45,7 @@ interface CountrySelectorProps {
 }
 
 export function CountrySelector({ value, onChange, isDark = false }: CountrySelectorProps) {
+  const { t } = useLanguage();
   const selected = options.find((o) => o.value === value.code) ?? null;
 
   const styles: StylesConfig<CountryOption> = {
@@ -109,7 +111,7 @@ export function CountrySelector({ value, onChange, isDark = false }: CountrySele
         htmlFor="country-select"
         className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2"
       >
-        Select Country
+        {t.selectCountry}
       </label>
       <Select<CountryOption>
         inputId="country-select"
@@ -124,8 +126,8 @@ export function CountrySelector({ value, onChange, isDark = false }: CountrySele
         components={{ Option: OptionComponent, SingleValue: SingleValueComponent }}
         styles={styles}
         isSearchable
-        placeholder="Search country..."
-        aria-label="Select country"
+        placeholder={t.searchCountry}
+        aria-label={t.selectCountry}
       />
     </div>
   );

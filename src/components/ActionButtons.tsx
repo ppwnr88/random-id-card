@@ -1,38 +1,17 @@
 import { useRef, useState } from 'react';
-import { Download, Copy, Check, Loader2 } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import { Copy, Check } from 'lucide-react';
 import type { IDCardData } from '../types';
+import { useLanguage } from '../i18n';
 
 interface ActionButtonsProps {
   cardRef: React.RefObject<HTMLDivElement>;
   data: IDCardData;
 }
 
-export function ActionButtons({ cardRef, data }: ActionButtonsProps) {
-  const [downloading, setDownloading] = useState(false);
+export function ActionButtons({ data }: ActionButtonsProps) {
+  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout>>();
-
-  const handleDownload = async () => {
-    if (!cardRef.current || downloading) return;
-    setDownloading(true);
-    try {
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 3,
-        useCORS: true,
-        backgroundColor: null,
-        logging: false,
-      });
-      const link = document.createElement('a');
-      link.download = `id-card-${data.country.code}-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    } catch (err) {
-      console.error('Download failed:', err);
-    } finally {
-      setDownloading(false);
-    }
-  };
 
   const handleCopy = async () => {
     const text = [
@@ -61,24 +40,6 @@ export function ActionButtons({ cardRef, data }: ActionButtonsProps) {
   return (
     <div className="flex gap-3 justify-center">
       <button
-        onClick={handleDownload}
-        disabled={downloading}
-        className="
-          flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold
-          bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700
-          disabled:opacity-60 disabled:cursor-not-allowed
-          text-white shadow-md shadow-indigo-500/25
-          transition-all duration-150
-        "
-        aria-label="Download ID card as PNG"
-      >
-        {downloading
-          ? <Loader2 size={16} className="animate-spin" />
-          : <Download size={16} />}
-        {downloading ? 'Saving…' : 'Download PNG'}
-      </button>
-
-      <button
         onClick={handleCopy}
         className="
           flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold
@@ -90,7 +51,7 @@ export function ActionButtons({ cardRef, data }: ActionButtonsProps) {
         aria-label="Copy ID card data to clipboard"
       >
         {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-        {copied ? 'Copied!' : 'Copy Data'}
+        {copied ? t.copied : t.copyData}
       </button>
     </div>
   );

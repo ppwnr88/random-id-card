@@ -1,12 +1,21 @@
 import { CreditCard } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { useLanguage, type Lang } from '../i18n';
 
 interface HeaderProps {
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
 }
 
+const LANGS: { code: Lang; label: string }[] = [
+  { code: 'en', label: 'EN' },
+  { code: 'th', label: 'ไทย' },
+  { code: 'zh', label: '中文' },
+];
+
 export function Header({ theme, onToggleTheme }: HeaderProps) {
+  const { lang, setLang, t } = useLanguage();
+
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
@@ -16,15 +25,35 @@ export function Header({ theme, onToggleTheme }: HeaderProps) {
           </div>
           <div className="min-w-0">
             <h1 className="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate">
-              Random ID Card Generator
+              {t.appTitle}
             </h1>
             <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight hidden sm:block">
-              195+ countries worldwide
+              {t.appSubtitle}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Language switcher */}
+          <div className="flex items-center rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            {LANGS.map(({ code, label }) => (
+              <button
+                key={code}
+                onClick={() => setLang(code)}
+                className={`
+                  px-2 py-1 text-xs font-medium transition-colors duration-150
+                  ${lang === code
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}
+                `}
+                aria-label={`Switch to ${label}`}
+                aria-pressed={lang === code}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           <a
             href="https://github.com/ppwnr88/random-id-card"
             target="_blank"

@@ -10,11 +10,13 @@ import { AdBanner } from './components/AdBanner';
 import { useTheme } from './hooks/useTheme';
 import { useCountryDetect } from './hooks/useCountryDetect';
 import { generateCardData } from './utils/country-format';
+import { LanguageProvider, useLanguage } from './i18n';
 
 import type { Country, IDCardData } from './types';
 
-export default function App() {
+function AppContent() {
   const { theme, toggle } = useTheme();
+  const { t } = useLanguage();
   const detectedCountry = useCountryDetect();
 
   const [country, setCountry] = useState<Country>(detectedCountry);
@@ -34,7 +36,6 @@ export default function App() {
 
   const generate = useCallback((c: Country) => {
     setIsGenerating(true);
-    // Small timeout to show the animation
     setTimeout(() => {
       setCardData(generateCardData(c));
       setIsGenerating(false);
@@ -61,11 +62,10 @@ export default function App() {
       {/* ── Hero text ────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-2 text-center">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Generate Realistic ID Cards
+          {t.heroTitle}
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
-          Create fake identity cards for testing, design mockups, or educational purposes.
-          Covers 195+ countries with realistic formats.
+          {t.heroDesc}
         </p>
       </div>
 
@@ -77,7 +77,7 @@ export default function App() {
           <div className="space-y-5">
             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm">
               <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
-                Configuration
+                {t.sectionConfig}
               </h3>
 
               <CountrySelector
@@ -99,30 +99,30 @@ export default function App() {
                   text-white shadow-lg shadow-indigo-500/30
                   transition-all duration-150
                 "
-                aria-label="Generate new random ID card"
+                aria-label={t.generateBtn}
               >
                 <RefreshCw
                   size={16}
                   className={isGenerating ? 'animate-spin' : ''}
                   aria-hidden="true"
                 />
-                {isGenerating ? 'Generating…' : 'Generate New Card'}
+                {isGenerating ? t.generatingBtn : t.generateBtn}
               </button>
             </div>
 
             {/* Info card */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm">
               <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
-                Card Details
+                {t.sectionDetails}
               </h3>
               <dl className="space-y-2 text-sm">
                 {[
-                  ['Country',   cardData.country.name],
-                  ['Region',    cardData.country.region],
-                  ['Name',      cardData.fullName],
-                  ['ID No.',    cardData.idNumber],
-                  ['Issued',    cardData.dateIssued],
-                  ['Expires',   cardData.dateExpiry],
+                  [t.detailCountry, cardData.country.name],
+                  [t.detailRegion,  cardData.country.region],
+                  [t.detailName,    cardData.fullName],
+                  [t.detailIdNo,    cardData.idNumber],
+                  [t.detailIssued,  cardData.dateIssued],
+                  [t.detailExpires, cardData.dateExpiry],
                 ].map(([label, val]) => (
                   <div key={label} className="flex justify-between gap-2">
                     <dt className="text-gray-400 dark:text-gray-500 flex-shrink-0">{label}</dt>
@@ -134,8 +134,7 @@ export default function App() {
 
             {/* Disclaimer */}
             <p className="text-[11px] text-gray-400 dark:text-gray-600 text-center leading-relaxed px-1">
-              All generated data is completely fictional and intended for testing and educational purposes only.
-              Do not use for identity fraud or illegal activities.
+              {t.disclaimer}
             </p>
           </div>
 
@@ -153,22 +152,13 @@ export default function App() {
         </div>
       </main>
 
-      {/* ── Info section (SEO content) ───────────────── */}
+      {/* ── Info section ─────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8 border-t border-gray-200 dark:border-gray-800">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
-            {
-              title: '195+ Countries',
-              desc: 'Full coverage of all UN member states and territories, each with their own national ID format.',
-            },
-            {
-              title: 'Realistic Formats',
-              desc: 'ID numbers follow the actual format rules of each country — from SSN (US) to Aadhaar (India).',
-            },
-            {
-              title: 'Privacy Safe',
-              desc: 'All data is randomly generated in your browser. Nothing is stored or transmitted.',
-            },
+            { title: t.info1Title, desc: t.info1Desc },
+            { title: t.info2Title, desc: t.info2Desc },
+            { title: t.info3Title, desc: t.info3Desc },
           ].map(({ title, desc }) => (
             <div key={title} className="text-center sm:text-left">
               <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{title}</h3>
@@ -186,20 +176,28 @@ export default function App() {
       {/* ── Footer ───────────────────────────────────── */}
       <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center text-xs text-gray-400 dark:text-gray-600">
-          <p>© {new Date().getFullYear()} Random ID Card Generator · For educational and testing use only</p>
+          <p>© {new Date().getFullYear()} Random ID Card Generator · {t.footerTagline}</p>
           <p className="mt-1">
-            Built with React, TypeScript &amp; Faker.js ·{' '}
+            {t.footerBuilt} ·{' '}
             <a
               href="https://github.com/ppwnr88/random-id-card"
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:text-gray-600 dark:hover:text-gray-400"
             >
-              Open source
+              {t.openSource}
             </a>
           </p>
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }
